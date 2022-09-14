@@ -7,4 +7,5 @@ s=数据库：stack 表名：stackqueue
 # 启动项目
 ### npm i
 ### npm start
+flexible.js适配
 
