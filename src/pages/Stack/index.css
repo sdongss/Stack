@@ -1,0 +1,7 @@
+.home {
+  width: 8rem;
+  min-height: 8rem;
+  margin: 1.3333rem auto;
+  display: flex;
+  justify-content: space-around;
+}
