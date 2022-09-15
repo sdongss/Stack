@@ -112,7 +112,6 @@ async getStack(){
     }else {
         status = 2
     }
-    console.log(status)
     const {data:res} = await axios.get('http://127.0.0.1:3000/stack/allstack')
     
     let arr = res.data
@@ -125,9 +124,18 @@ async getStack(){
 }
 // 向数据库添加任务
 async addStackTo(name) {
-    console.log('点击了')
-    const {data:res} = await axios.get('http://127.0.0.1:3000/stack/addstack',{params:{title:name}})
-    console.log(res)
+    let type = this.props.type
+    let status;
+    if(type == 'prepare'){
+        status = 0
+    }else if(type == 'learning'){
+        status = 1
+    }else {
+        status = 2
+    }
+   
+    await axios.get('http://127.0.0.1:3000/stack/addstack',{params:{title:name,status:status}})
+    this.getStack()
 }
 // 向数据库更改对应的任务状态
 async updateStack(id){
@@ -165,11 +173,16 @@ showBtn(){
 deleteStack(key){
     let arr = [...this.state.stackList]
     arr = arr.filter((item,index) =>{
-        return index !== key
+        return item.id !== key
     })
     this.setState({
         stackList:arr
     })
+    this.deleteStackTo(key)
+}
+// 数据库删除任务项
+async deleteStackTo(key){
+    await axios.get('http://127.0.0.1:3000/stack/removestack',{params:{id:key}})
 }
   render() {
     return (
@@ -180,7 +193,7 @@ deleteStack(key){
         <div className='content' style={{backgroundColor:this.state.color}} ref={this.stackContent}>
             <div className='stack-item'>
                 {/* 任务项 */}
-                {this.state.stackList.map((item,index) => (<div key={index} className="item-title" draggable="true" data-key={item.id}>{item.title}<div className='clear' onClick={this.deleteStack.bind(this,index)}>#</div></div>))}
+                {this.state.stackList.map((item,index) => (<div key={index} className="item-title" draggable="true" data-key={item.id}>{item.title}<div className='clear' onClick={this.deleteStack.bind(this,item.id)}>#</div></div>))}
                 {this.showInput.call(this)}
             </div>
             {/* <div className='addBtn' onClick={this.addStack.bind(this)}><span>+</span></div> */}
