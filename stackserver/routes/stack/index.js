@@ -38,10 +38,8 @@ router.get('/updatestack',(req,res) =>{
   })
 })
 router.get('/removestack',(req,res) =>{
-  const title = req.query.title
-  const status = req.query.status
-  const sql = `delete from stackqueue where title = '${title}' and status == ${status}`
-  console.log(sql)
+  const id = req.query.id
+  const sql = `delete from stackqueue where id = ${id}`
   db.query(sql,(err,result)=>{
     if(err){
       res.send({
@@ -54,11 +52,22 @@ router.get('/removestack',(req,res) =>{
         res.send({
           meta:{
             status:200,
-            msg:'添加成功！'
+            msg:'删除成功！'
           }
         })
       }
     }
+  })
+})
+router.get('/addstack',(req,res) =>{
+  const {title,status} = req.query
+  console.log(title,status)
+  const sql = `insert into stackqueue(title,status) values ('${title}',${status})`
+  db.query(sql,(err,result)=>{
+    res.send({
+      msg:'插入成功！'
+    })
+    
   })
 })
 module.exports = router;
